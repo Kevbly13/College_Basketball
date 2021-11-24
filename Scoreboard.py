@@ -10,13 +10,14 @@ class Scoreboard(ttk.Frame):
         ttk.Frame.__init__(self, parent, style='ScoreBoard.TFrame')
         self.parent = parent
         self.game = active_game
+        self.game_clock = self.game.game_clock
 
         self.columnconfigure(1, weight=2, uniform='college')
         self.columnconfigure(2, weight=1)
         self.columnconfigure(3, weight=2, uniform='college')
 
         # Time Panel
-        lbl_time_clock = ttk.Label(self, text=f'{self.game.time_remaining}:00', font=MEDIUM_BOLD,
+        lbl_time_clock = ttk.Label(self, text=self.game_clock.display_time_clock(), font=MEDIUM_BOLD,
                                    foreground='red', background='black')
         lbl_time_clock.grid(row=1, column=2, rowspan=2)
 

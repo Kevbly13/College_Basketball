@@ -132,4 +132,11 @@ class Team:
         else:
             return round(float(total / self.games), 1)
 
+    def get_ordered_roster(self):
+        player_list = []
+        for player in self.roster:
+            player_list.append(player.display_last_name_first())
+        player_list.sort()
+        return player_list
+
 
