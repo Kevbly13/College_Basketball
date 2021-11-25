@@ -1,28 +1,9 @@
 from tkinter import ttk, messagebox
 from tkinter import *
 import random
-from PlayGame import GameWindow
-from GameStatSheet import StatSheetWindow
+from GameStatKeeper import GameStatKeeper
 from League import save_league
 from KBFonts import *
-
-
-def start_dlg(root, team):
-    dlg = GameWindow(team)
-    dlg.protocol('WM_DELETE_WINDOW', dlg.dismiss)
-    dlg.transient(root)
-    dlg.wait_visibility()
-    dlg.grab_set()
-    dlg.wait_window()
-
-
-def start_stat_dlg(root, game):
-    dlg = StatSheetWindow(game)
-    dlg.protocol('WM_DELETE_WINDOW', dlg.dismiss)
-    dlg.transient(root)
-    dlg.wait_visibility()
-    dlg.grab_set()
-    dlg.wait_window()
 
 
 def create_group_panel(container, group):
@@ -75,9 +56,11 @@ class ScheduleWindow(ttk.Frame):
         active_game = self.league.conferences[choice - 1].get_next_game()
         active_game.home_score = 0
         active_game.away_score = 0
-        start_stat_dlg(self.parent, active_game)
-        # start_dlg(self.parent, active_game.home_team)
-        # start_dlg(self.parent, active_game.away_team)
+        root2 = Toplevel(self.parent)
+        myGUI = GameStatKeeper(root2, active_game)
+        root2.withdraw()
+        myGUI.lift()
+
         if active_game.home_score != 0 and active_game.away_score != 0:
             active_game.save_game_result()
             messagebox.showinfo('Game Result', active_game.display_game_result())
