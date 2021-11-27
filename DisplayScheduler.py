@@ -28,9 +28,9 @@ def create_group_panel(container, group):
 
 
 class ScheduleWindow(ttk.Frame):
-    def __init__(self, parent, league):
-        ttk.Frame.__init__(self, parent)
-        self.parent = parent
+    def __init__(self, root, league):
+        ttk.Frame.__init__(self, root)
+        self.root = root
 
         self.league = league
         self.v_choice = IntVar()
@@ -56,10 +56,9 @@ class ScheduleWindow(ttk.Frame):
         active_game = self.league.conferences[choice - 1].get_next_game()
         active_game.home_score = 0
         active_game.away_score = 0
-        root2 = Toplevel(self.parent)
-        myGUI = GameStatKeeper(root2, active_game)
-        root2.withdraw()
-        myGUI.lift()
+
+        new_root = GameStatKeeper(active_game)
+        new_root.lift()
 
         if active_game.home_score != 0 and active_game.away_score != 0:
             active_game.save_game_result()

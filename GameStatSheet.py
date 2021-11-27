@@ -38,7 +38,7 @@ class StatSheetWindow(Toplevel):
     def init_window(self):
         self.title("Play Game")
         self.geometry("850x600")
-        self.tkraise()
+        self.iconify()
 
         self.current_game.start_game()
 
@@ -57,6 +57,7 @@ class StatSheetWindow(Toplevel):
                                                  state="readonly"))
         for i in range(len(home_combo_boxes)):
             home_combo_boxes[i].grid(row=i, column=0, padx=5, pady=5)
+            home_combo_boxes[i].current(i)
 
         for i in range(5):
             self.current_game.away_lineup.append(StringVar())
@@ -65,6 +66,7 @@ class StatSheetWindow(Toplevel):
                              textvariable=self.current_game.away_lineup[i],
                              state="readonly"))
         for i in range(len(away_combo_boxes)):
+            away_combo_boxes[i].current(i)
             away_combo_boxes[i].grid(row=i, column=2, padx=5, pady=5)
 
         self.combo_boxes = away_combo_boxes + home_combo_boxes

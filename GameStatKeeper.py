@@ -22,19 +22,19 @@ def player_list_is_unique(combo_boxes):
         return False
 
 
-class GetStartingLineupFrame(Frame):
-    def __init__(self, parent, active_game):
-        Frame.__init__(self)
-        self.parent = parent
+class StartingLineupFrame(ttk.Frame):
+    def __init__(self, stat_keeper_obj):
+        ttk.Frame.__init__(self, stat_keeper_obj)
+        self.parent = stat_keeper_obj
         self.combo_boxes = []
         self.home_selections = []
         self.away_selections = []
-        self.game = active_game
+        self.game = stat_keeper_obj.game
 
         self.init_combo_boxes()
-        self.lbl_home = ttk.Label(self.parent, text=self.game.home_team.college).grid(row=0, column=0)
-        self.lbl_away = ttk.Label(self.parent, text=self.game.away_team.college).grid(row=0, column=1)
-        self.btn_set = ttk.Button(self.parent, text="Line-up Set", command=self.check_lineup)
+        self.lbl_home = ttk.Label(self, text=self.game.home_team.college).grid(row=0, column=0)
+        self.lbl_away = ttk.Label(self, text=self.game.away_team.college).grid(row=0, column=1)
+        self.btn_set = ttk.Button(self, text="Line-up Set", command=self.check_lineup)
         self.btn_set.grid(row=7, column=0, columnspan=2, pady=10)
 
     def init_combo_boxes(self):
@@ -43,20 +43,22 @@ class GetStartingLineupFrame(Frame):
 
         for i in range(5):
             self.home_selections.append(StringVar())
-            home_combo_boxes.append(ttk.Combobox(self.parent, values=self.game.home_team.get_ordered_roster(),
+            home_combo_boxes.append(ttk.Combobox(self, values=self.game.home_team.get_ordered_roster(),
                                                  textvariable=self.home_selections[i],
                                                  state="readonly"))
         for i in range(len(home_combo_boxes)):
             home_combo_boxes[i].grid(row=i + 1, column=0, padx=10, pady=5)
+            home_combo_boxes[i].current(i)
 
         for i in range(5):
             self.away_selections.append(StringVar())
             away_combo_boxes.append(
-                ttk.Combobox(self.parent, values=self.game.away_team.get_ordered_roster(),
+                ttk.Combobox(self, values=self.game.away_team.get_ordered_roster(),
                              textvariable=self.away_selections[i],
                              state="readonly"))
         for i in range(len(away_combo_boxes)):
             away_combo_boxes[i].grid(row=i + 1, column=1, padx=10, pady=5)
+            away_combo_boxes[i].current(i)
 
         self.combo_boxes = away_combo_boxes + home_combo_boxes
 
@@ -73,19 +75,16 @@ class GetStartingLineupFrame(Frame):
                 for player in self.game.away_team.roster:
                     if player.display_last_name_first() == player_name:
                         self.game.away_lineup.append(player)
-            jb_frame = JumpBallFrame(self.parent, self.game)
-            self.grid_forget()
-            jb_frame.grid(row=0, column=0)
-            jb_frame.tkraise()
+            self.parent.switch_frame(JumpBallFrame)
         else:
             print("Does not check out")
 
 
-class JumpBallFrame(Frame):
-    def __init__(self, parent, active_game):
-        Frame.__init__(self)
-        self.parent = parent
-        self.game = active_game
+class JumpBallFrame(ttk.Frame):
+    def __init__(self, stat_keeper_obj):
+        ttk.Frame.__init__(self, stat_keeper_obj)
+        self.master = stat_keeper_obj
+        self.game = stat_keeper_obj.game
         self.home_player_buttons = []
         self.away_player_buttons = []
 
@@ -93,9 +92,9 @@ class JumpBallFrame(Frame):
 
     def init_buttons(self):
         for player in self.game.home_lineup:
-            self.home_player_buttons.append(Button(self.parent, text=player.display_last_name_first()))
+            self.home_player_buttons.append(Button(self, text=player.display_last_name_first()))
         for player in self.game.away_lineup:
-            self.away_player_buttons.append(Button(self.parent, text=player.display_last_name_first()))
+            self.away_player_buttons.append(Button(self, text=player.display_last_name_first()))
 
         r = 0
         for btn in self.home_player_buttons:
@@ -108,10 +107,8 @@ class JumpBallFrame(Frame):
 
 
 class GameStatKeeper(Toplevel):
-    def __init__(self, parent, active_game):
+    def __init__(self, active_game):
         Toplevel.__init__(self)
-        self.parent = parent
-
         self.title("College Basketball Game Stat Keeper")
 
         window_width = 850
@@ -122,8 +119,16 @@ class GameStatKeeper(Toplevel):
 
         self.game = active_game
         self.game.start_game()
-        starting_lineup_frame = GetStartingLineupFrame(self, self.game)
-        starting_lineup_frame.grid(row=0, column=0, sticky='nsew')
+
+        self._frame = None
+        self.switch_frame(StartingLineupFrame)
+
+    def switch_frame(self, frame_class):
+        new_frame = frame_class(self)
+        if self._frame is not None:
+            self._frame.destroy()
+        self._frame = new_frame
+        self._frame.grid(row=0, column=0)
 
     def dismiss(self):
         self.grab_release()
