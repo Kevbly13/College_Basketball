@@ -17,6 +17,7 @@ class BasketballGame:
         self.away_timeouts = 3
         self.half = 1
         self.game_clock = GameClock(20)
+        self.current_possession = 0
 
     def start_game(self):
         self.home_score = 0
@@ -53,4 +54,5 @@ class BasketballGame:
         else:
             return f"{self.away_team.college} {self.away_team.nickname} at " \
                    f"{self.home_team.college} {self.home_team.nickname}"
+
 

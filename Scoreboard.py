@@ -1,3 +1,4 @@
+import tkinter
 from tkinter import ttk
 from tkinter.ttk import *
 from KBFonts import *
@@ -17,7 +18,9 @@ class Scoreboard(ttk.Frame):
         self.columnconfigure(3, weight=2, uniform='college')
 
         # Time Panel
-        lbl_time_clock = ttk.Label(self, text=self.game_clock.display_time_clock(), font=MEDIUM_BOLD,
+        self.time_on_clock = tkinter.StringVar()
+        self.time_on_clock.set(self.game_clock.display_time_clock())
+        lbl_time_clock = ttk.Label(self, textvariable=self.time_on_clock, font=MEDIUM_BOLD,
                                    foreground='red', background='black')
         lbl_time_clock.grid(row=1, column=2, rowspan=2)
 
@@ -63,5 +66,9 @@ class Scoreboard(ttk.Frame):
         lbl_away_fouls = ttk.Label(self, text=f'{self.game.away_fouls}', font=SMALL_FONT,
                                    foreground='white', background='black')
         lbl_away_fouls.grid(row=5, column=3, padx=10)
+
+    def time_passed(self):
+        self.game_clock.run_clock()
+        self.time_on_clock.set(self.game_clock.display_time_clock())
 
 

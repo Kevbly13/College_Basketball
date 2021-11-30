@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+from Scoreboard import Scoreboard
 
 
 def player_list_does_not_contain_null(combo_boxes):
@@ -64,7 +65,6 @@ class StartingLineupFrame(ttk.Frame):
 
     def check_lineup(self):
         if player_list_is_unique(self.combo_boxes) and player_list_does_not_contain_null(self.combo_boxes):
-            print("Line-up Checks Out")
             for var in self.home_selections:
                 player_name = var.get()
                 for player in self.game.home_team.roster:
@@ -83,7 +83,7 @@ class StartingLineupFrame(ttk.Frame):
 class JumpBallFrame(ttk.Frame):
     def __init__(self, stat_keeper_obj):
         ttk.Frame.__init__(self, stat_keeper_obj)
-        self.master = stat_keeper_obj
+        self.parent = stat_keeper_obj
         self.game = stat_keeper_obj.game
         self.home_player_buttons = []
         self.away_player_buttons = []
@@ -98,11 +98,59 @@ class JumpBallFrame(ttk.Frame):
 
         r = 0
         for btn in self.home_player_buttons:
+            btn["state"] = DISABLED
             btn.grid(row=r, column=0, padx=10, pady=7)
             r += 1
         r = 0
         for btn in self.away_player_buttons:
-            btn.grid(row=r, column=1, padx=10, pady=7)
+            btn["state"] = DISABLED
+            btn.grid(row=r, column=2, padx=10, pady=7)
+            r += 1
+
+        ttk.Label(self, text="Who wins the jump ball?").grid(row=6, column=0, columnspan=2)
+        btn_home_jumpball = ttk.Button(self, text=self.game.home_team.college, command=self.jumpball_to_home)
+        btn_home_jumpball.grid(row=7, column=0, padx=5, pady=10)
+        btn_away_jumpball = ttk.Button(self, text=self.game.away_team.college, command=self.jumpball_to_away)
+        btn_away_jumpball.grid(row=7, column=1, padx=5, pady=10)
+
+    def jumpball_to_home(self):
+        self.game.possession_arrow_to_home = False
+        self.game.current_possession = 0
+        self.parent.switch_frame(MainGameFrame)
+
+    def jumpball_to_away(self):
+        self.game.possession_arrow_to_home = True
+        self.game.current_possession = 1
+        self.parent.switch_frame(MainGameFrame)
+
+
+class MainGameFrame(ttk.Frame):
+    def __init__(self, stat_keeper_obj):
+        ttk.Frame.__init__(self, stat_keeper_obj)
+        self.parent = stat_keeper_obj
+        self.game = stat_keeper_obj.game
+        self.home_player_buttons = []
+        self.away_player_buttons = []
+
+        self.init_buttons()
+        scoreboard = Scoreboard(self, self.game)
+        scoreboard.grid(row=0, column=1, rowspan=5)
+
+        self.parent.bind("<space>", lambda e: scoreboard.time_passed())
+
+    def init_buttons(self):
+        for player in self.game.home_lineup:
+            self.home_player_buttons.append(Button(self, text=player.display_last_name_first()))
+        for player in self.game.away_lineup:
+            self.away_player_buttons.append(Button(self, text=player.display_last_name_first()))
+
+        r = 0
+        for btn in self.home_player_buttons:
+            btn.grid(row=r, column=0, padx=10, pady=7)
+            r += 1
+        r = 0
+        for btn in self.away_player_buttons:
+            btn.grid(row=r, column=2, padx=10, pady=7)
             r += 1
 
 
