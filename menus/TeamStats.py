@@ -1,6 +1,6 @@
 from tkinter import ttk
 from tkinter import *
-from KBFonts import *
+from resources.KBFonts import *
 
 
 class TeamStatsWindow(ttk.Frame):

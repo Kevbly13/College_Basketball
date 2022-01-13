@@ -1,5 +1,5 @@
 import random
-from League import \
+from gameObjects.League import \
     save_league, load_league
 
 

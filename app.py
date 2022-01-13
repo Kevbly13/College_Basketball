@@ -1,18 +1,18 @@
 from tkinter import *
 from tkinter import ttk
-from KBFonts import TITLE_FONT
-from DisplayStandings import StandingsWindow
-from DisplayScheduler import ScheduleWindow
-from LeagueLeaders import LeadersWindow
-from TeamStats import TeamStatsWindow
-from League import load_league
+from resources.KBFonts import TITLE_FONT
+from menus.DisplayStandings import StandingsWindow
+from menus.DisplayScheduler import ScheduleWindow
+from menus.LeagueLeaders import LeadersWindow
+from menus.TeamStats import TeamStatsWindow
+from gameObjects.League import load_league
 
 
 class StartMenu(ttk.Frame):
     def __init__(self, parent):
         ttk.Frame.__init__(self, parent)
 
-        self.img = PhotoImage(file='burke.png')
+        self.img = PhotoImage(file='resources/burke.png')
 
         lbl_title = ttk.Label(self, text="NCAA Basketball Organizer 2018-19")
         lbl_title.config(font=TITLE_FONT)

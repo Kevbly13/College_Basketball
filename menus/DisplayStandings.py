@@ -1,5 +1,5 @@
 from tkinter import ttk
-from KBFonts import *
+from resources.KBFonts import *
 
 
 def create_group_panel(container, conference):

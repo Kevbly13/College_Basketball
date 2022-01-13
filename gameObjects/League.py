@@ -2,23 +2,23 @@ import pickle
 import csv
 import random
 from Team import Team
-from Conference import Conference
+from gameObjects.Conference import Conference
 
 
 def load_league():
-    with open('league.pickle', mode='rb') as f:
+    with open('../data/league.pickle', mode='rb') as f:
         league = pickle.load(f)
     league.sort_teams()
     return league
 
 
 def save_league(league):
-    with open('league.pickle', mode='wb') as f:
+    with open('../data/league.pickle', mode='wb') as f:
         pickle.dump(league, f)
 
 
 def add_team_players(team):
-    with open("player_list.csv", mode='r', encoding='utf-8') as file:
+    with open("../data/player_list.csv", mode='r', encoding='utf-8') as file:
         reader = csv.reader(file, delimiter=",", skipinitialspace=True)
 
         for row in reader:

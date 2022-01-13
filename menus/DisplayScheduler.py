@@ -2,8 +2,8 @@ from tkinter import ttk, messagebox
 from tkinter import *
 import random
 from GameStatKeeper import GameStatKeeper
-from League import save_league
-from KBFonts import *
+from gameObjects.League import save_league
+from resources.KBFonts import *
 
 
 def create_group_panel(container, group):

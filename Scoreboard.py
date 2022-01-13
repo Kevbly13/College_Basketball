@@ -1,7 +1,7 @@
 import tkinter
 from tkinter import ttk
 from tkinter.ttk import *
-from KBFonts import *
+from resources.KBFonts import *
 
 
 class Scoreboard(ttk.Frame):
